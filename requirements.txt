@@ -2,8 +2,4 @@ flask>=3.0.0
 flask-limiter>=3.5.0
 bleach>=6.1.0
 reportlab>=4.1.0
-<<<<<<< HEAD
 python-dotenv>=1.0.0
-=======
-python-dotenv>=1.0.0
->>>>>>> f8f7ea4b98a7420b0d25a319919fde0c9cfbda56

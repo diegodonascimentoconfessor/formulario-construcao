@@ -1,0 +1,14 @@
+# Ignore local and dev-only files for Vercel deployments
+.venv/
+venv/
+logs/
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.env
+.git/
+.gitignore
+tests/
+README.md
+construcao/

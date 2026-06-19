@@ -68,9 +68,6 @@ def create_app() -> Flask:
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _setup_logging(app: Flask) -> None:
-    log_dir = app.config["LOG_DIR"]
-    os.makedirs(log_dir, exist_ok=True)
-
     level = getattr(logging, app.config.get("LOG_LEVEL", "INFO"), logging.INFO)
     fmt   = logging.Formatter(
         "[%(asctime)s] %(levelname)s %(name)s — %(message)s",
@@ -78,21 +75,26 @@ def _setup_logging(app: Flask) -> None:
     )
 
     # Arquivo rotativo (5 MB × 3 backups)
-    file_handler = RotatingFileHandler(
-        os.path.join(log_dir, "app.log"),
-        maxBytes=5 * 1024 * 1024,
-        backupCount=3,
-        encoding="utf-8",
-    )
-    file_handler.setFormatter(fmt)
-    file_handler.setLevel(level)
-
     # Console
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(fmt)
     console_handler.setLevel(level)
 
     app.logger.handlers.clear()
-    app.logger.addHandler(file_handler)
     app.logger.addHandler(console_handler)
+
+    if app.config.get("LOG_TO_FILE", True):
+        log_dir = app.config["LOG_DIR"]
+        os.makedirs(log_dir, exist_ok=True)
+
+        file_handler = RotatingFileHandler(
+            os.path.join(log_dir, "app.log"),
+            maxBytes=5 * 1024 * 1024,
+            backupCount=3,
+            encoding="utf-8",
+        )
+        file_handler.setFormatter(fmt)
+        file_handler.setLevel(level)
+        app.logger.addHandler(file_handler)
+
     app.logger.setLevel(level)

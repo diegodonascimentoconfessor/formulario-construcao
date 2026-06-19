@@ -37,8 +37,9 @@ class BaseConfig:
     }
 
     # ── Logging ────────────────────────────────────────────────────────────
-    LOG_DIR: str   = os.path.join(os.path.dirname(__file__), "logs")
+    LOG_DIR: str   = os.getenv("LOG_DIR", os.path.join(os.path.dirname(__file__), "logs"))
     LOG_LEVEL: str = "INFO"
+    LOG_TO_FILE: bool = os.getenv("LOG_TO_FILE", "1").lower() not in {"0", "false", "no"}
 
 
 class DevelopmentConfig(BaseConfig):
@@ -48,6 +49,11 @@ class DevelopmentConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
+    LOG_TO_FILE = os.getenv("LOG_TO_FILE", "0" if os.getenv("VERCEL") else "1").lower() not in {
+        "0",
+        "false",
+        "no",
+    }
     # Em produção exija HTTPS (habilite HSTS, etc.)
     SECURITY_HEADERS = {
         **BaseConfig.SECURITY_HEADERS,

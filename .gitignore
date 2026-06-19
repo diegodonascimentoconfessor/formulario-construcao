@@ -1,5 +1,4 @@
-# cria o arquivo
-echo "__pycache__/
+__pycache__/
 *.pyc
 *.pyo
 .env
@@ -8,4 +7,4 @@ logs/
 .venv/
 venv/
 dist/
-*.zip" > .gitignore
+*.zip
