@@ -1,0 +1,11 @@
+# cria o arquivo
+echo "__pycache__/
+*.pyc
+*.pyo
+.env
+logs/
+*.log
+.venv/
+venv/
+dist/
+*.zip" > .gitignore
