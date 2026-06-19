@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulário de Atendimento — Material de Construção</title>
+  <style>
+    /* ─── Tokens ─────────────────────────────────────────── */
+    :root {
+      --bg:        #F5F3EF;
+      --surface:   #FFFFFF;
+      --border:    #D9D4CB;
+      --accent:    #C05E1A;       /* tijolo queimado */
+      --accent2:   #1F3A2D;       /* verde-musgo profundo */
+      --text:      #1A1916;
+      --muted:     #6B6560;
+      --danger:    #B91C1C;
+      --radius:    6px;
+      --shadow:    0 2px 12px rgba(0,0,0,.08);
+      --font-disp: 'Georgia', serif;
+      --font-body: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      font-family: var(--font-body);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ─── Header ─────────────────────────────────────────── */
+    header {
+      background: var(--accent2);
+      color: #fff;
+      padding: 28px 40px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 4px solid var(--accent);
+    }
+    header .logo-icon {
+      width: 52px; height: 52px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; flex-shrink: 0;
+    }
+    header h1 {
+      font-family: var(--font-disp);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: .3px;
+      line-height: 1.2;
+    }
+    header p { font-size: .82rem; opacity: .75; margin-top: 3px; }
+
+    /* ─── Main layout ─────────────────────────────────────── */
+    main {
+      max-width: 920px;
+      margin: 36px auto 0;
+      padding: 0 20px;
+      display: grid;
+      gap: 24px;
+    }
+
+    /* ─── Card ────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      background: var(--accent2);
+      color: #fff;
+      padding: 12px 20px;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-header span { font-size: 1rem; }
+    .card-body { padding: 24px 20px; }
+
+    /* ─── Grid de campos ──────────────────────────────────── */
+    .grid { display: grid; gap: 16px; }
+    .col-2 { grid-template-columns: 1fr 1fr; }
+    .col-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .col-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    @media(max-width: 640px){
+      .col-2, .col-3, .col-4 { grid-template-columns: 1fr; }
+    }
+
+    /* ─── Campos ──────────────────────────────────────────── */
+    label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    label .req { color: var(--accent); }
+    input, select, textarea {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      font-size: .9rem;
+      font-family: var(--font-body);
+      color: var(--text);
+      background: #FDFCFA;
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(192,94,26,.12);
+    }
+    textarea { resize: vertical; min-height: 72px; }
+
+    /* ─── Tabela de itens ─────────────────────────────────── */
+    .items-table { width: 100%; border-collapse: collapse; }
+    .items-table thead tr {
+      background: #F0EDE8;
+      font-size: .73rem;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .items-table th, .items-table td {
+      padding: 9px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .items-table tbody tr:last-child td { border-bottom: none; }
+    .items-table input, .items-table select {
+      padding: 6px 8px; font-size: .83rem;
+    }
+    .items-table td.center { text-align: center; }
+
+    .btn-remove {
+      background: none; border: none; cursor: pointer;
+      color: var(--danger); font-size: 1.1rem; padding: 2px 6px;
+      border-radius: 4px; transition: background .15s;
+    }
+    .btn-remove:hover { background: #fee2e2; }
+
+    .btn-add {
+      margin-top: 12px;
+      background: none;
+      border: 1.5px dashed var(--accent);
+      color: var(--accent);
+      font-size: .82rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-add:hover { background: rgba(192,94,26,.06); }
+
+    /* ─── Totais ──────────────────────────────────────────── */
+    .totals-box {
+      margin-top: 16px;
+      margin-left: auto;
+      width: 280px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .totals-box table { width: 100%; border-collapse: collapse; }
+    .totals-box td { padding: 8px 14px; font-size: .85rem; }
+    .totals-box tr:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .totals-box .total-row { background: var(--accent2); color: #fff; font-weight: 700; }
+
+    /* ─── Assinaturas ─────────────────────────────────────── */
+    .sig-area {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 24px; margin-top: 8px;
+    }
+    @media(max-width:580px){ .sig-area { grid-template-columns: 1fr; } }
+    .sig-box {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .sig-line {
+      border-top: 1px solid var(--text);
+      margin: 48px 20px 8px;
+    }
+    .sig-label { font-size: .75rem; color: var(--muted); font-weight: 600; }
+
+    /* ─── Obs / status ────────────────────────────────────── */
+    .status-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .status-btn {
+      border: 2px solid var(--border);
+      background: none;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      color: var(--muted);
+    }
+    .status-btn.active-pendente { border-color: #d97706; background: #fef3c7; color: #92400e; }
+    .status-btn.active-aprovado { border-color: #15803d; background: #dcfce7; color: #14532d; }
+    .status-btn.active-entregue { border-color: #1d4ed8; background: #dbeafe; color: #1e3a8a; }
+    .status-btn.active-cancelado { border-color: var(--danger); background: #fee2e2; color: #7f1d1d; }
+
+    /* ─── Ações ───────────────────────────────────────────── */
+    .actions {
+      display: flex; gap: 12px; justify-content: flex-end;
+      flex-wrap: wrap; padding-top: 4px;
+    }
+    .btn {
+      padding: 11px 28px;
+      border-radius: var(--radius);
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .15s;
+      letter-spacing: .3px;
+    }
+    .btn-secondary {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(192,94,26,.25);
+    }
+    .btn-primary:hover { background: #a34c10; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ─── Toast ───────────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      background: var(--accent2); color: #fff;
+      padding: 12px 24px; border-radius: 24px;
+      font-size: .85rem; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+      z-index: 999;
+    }
+    #toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">🧱</div>
+  <div>
+    <h1>Material de Construção — Formulário de Atendimento</h1>
+    <p>Registre pedidos, orçamentos e saídas de material</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Dados do Atendimento ── -->
+  <div class="card">
+    <div class="card-header"><span>📋</span> Dados do Atendimento</div>
+    <div class="card-body">
+      <div class="grid col-4">
+        <div>
+          <label>Nº do Atendimento <span class="req">*</span></label>
+          <input id="num_atend" type="text" placeholder="ATD-2025-001" />
+        </div>
+        <div>
+          <label>Tipo <span class="req">*</span></label>
+          <select id="tipo">
+            <option value="">Selecione…</option>
+            <option>Orçamento</option>
+            <option>Pedido de Venda</option>
+            <option>Requisição Interna</option>
+            <option>Devolução</option>
+            <option>Entrega Agendada</option>
+          </select>
+        </div>
+        <div>
+          <label>Data <span class="req">*</span></label>
+          <input id="data" type="date" />
+        </div>
+        <div>
+          <label>Hora</label>
+          <input id="hora" type="time" />
+        </div>
+      </div>
+
+      <div class="grid col-2" style="margin-top:16px;">
+        <div>
+          <label>Vendedor / Atendente</label>
+          <input id="vendedor" type="text" placeholder="Nome do atendente" />
+        </div>
+        <div>
+          <label>Status</label>
+          <div class="status-row" style="margin-top:6px;">
+            <button class="status-btn active-pendente" id="st_pendente"    onclick="setStatus('pendente')">Pendente</button>
+            <button class="status-btn" id="st_aprovado"   onclick="setStatus('aprovado')">Aprovado</button>
+            <button class="status-btn" id="st_entregue"   onclick="setStatus('entregue')">Entregue</button>
+            <button class="status-btn" id="st_cancelado"  onclick="setStatus('cancelado')">Cancelado</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Dados do Cliente ── -->
+  <div class="card">
+    <div class="card-header"><span>👤</span> Dados do Cliente</div>
+    <div class="card-body">
+      <div class="grid col-2">
+        <div>
+          <label>Nome / Razão Social <span class="req">*</span></label>
+          <input id="cli_nome" type="text" placeholder="João da Silva / Construtora XYZ Ltda." />
+        </div>
+        <div>
+          <label>CPF / CNPJ</label>
+          <input id="cli_doc" type="text" placeholder="000.000.000-00" />
+        </div>
+      </div>
+      <div class="grid col-3" style="margin-top:16px;">
+        <div>
+          <label>Telefone</label>
+          <input id="cli_tel" type="text" placeholder="(84) 9 9999-9999" />
+        </div>
+        <div>
+          <label>E-mail</label>
+          <input id="cli_email" type="email" placeholder="email@exemplo.com" />
+        </div>
+        <div>
+          <label>Obra / Projeto</label>
+          <input id="cli_obra" type="text" placeholder="Residência Bairro X" />
+        </div>
+      </div>
+      <div class="grid col-3" style="margin-top:16px;">
+        <div>
+          <label>Endereço de Entrega</label>
+          <input id="cli_end" type="text" placeholder="Rua, número" />
+        </div>
+        <div>
+          <label>Bairro</label>
+          <input id="cli_bairro" type="text" placeholder="Bairro" />
+        </div>
+        <div>
+          <label>Cidade / UF</label>
+          <input id="cli_cidade" type="text" placeholder="Natal / RN" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Itens do Pedido ── -->
+  <div class="card">
+    <div class="card-header"><span>🏗️</span> Itens do Pedido</div>
+    <div class="card-body">
+      <table class="items-table" id="itensTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="min-width:200px">Descrição do Material</th>
+            <th>Categoria</th>
+            <th>Un.</th>
+            <th>Qtd.</th>
+            <th>Preço Unit. (R$)</th>
+            <th>Total (R$)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="itensBody"></tbody>
+      </table>
+      <button class="btn-add" onclick="addItem()">+ Adicionar item</button>
+
+      <div class="totals-box">
+        <table>
+          <tr><td>Subtotal</td><td id="tSubtotal" style="text-align:right">R$ 0,00</td></tr>
+          <tr>
+            <td>Desconto (%)</td>
+            <td style="text-align:right">
+              <input id="desconto" type="number" min="0" max="100" value="0"
+                style="width:70px;padding:4px 6px;font-size:.82rem" oninput="calcTotals()" />
+            </td>
+          </tr>
+          <tr><td>Frete (R$)</td>
+            <td style="text-align:right">
+              <input id="frete" type="number" min="0" value="0"
+                style="width:80px;padding:4px 6px;font-size:.82rem" oninput="calcTotals()" />
+            </td>
+          </tr>
+          <tr class="total-row">
+            <td>TOTAL</td>
+            <td id="tTotal" style="text-align:right">R$ 0,00</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Condições ── -->
+  <div class="card">
+    <div class="card-header"><span>💳</span> Condições Comerciais</div>
+    <div class="card-body">
+      <div class="grid col-3">
+        <div>
+          <label>Forma de Pagamento</label>
+          <select id="pagamento">
+            <option>À vista</option>
+            <option>Boleto 30 dias</option>
+            <option>Boleto 30/60</option>
+            <option>Cartão Débito</option>
+            <option>Cartão Crédito</option>
+            <option>PIX</option>
+            <option>Financiado</option>
+          </select>
+        </div>
+        <div>
+          <label>Prazo de Entrega</label>
+          <input id="prazo" type="text" placeholder="Ex.: 3 dias úteis" />
+        </div>
+        <div>
+          <label>Validade do Orçamento</label>
+          <input id="validade" type="date" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Observações ── -->
+  <div class="card">
+    <div class="card-header"><span>📝</span> Observações</div>
+    <div class="card-body">
+      <textarea id="obs" rows="4" placeholder="Informações adicionais, especificações técnicas, condições especiais…"></textarea>
+    </div>
+  </div>
+
+  <!-- ── Assinaturas ── -->
+  <div class="card">
+    <div class="card-header"><span>✍️</span> Assinaturas</div>
+    <div class="card-body">
+      <div class="sig-area">
+        <div class="sig-box">
+          <div class="sig-line"></div>
+          <div class="sig-label">Atendente / Vendedor</div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-line"></div>
+          <div class="sig-label">Cliente / Responsável</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Ações ── -->
+  <div class="card">
+    <div class="card-body">
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="limpar()">🗑 Limpar</button>
+        <button class="btn btn-primary" id="btnGerar" onclick="gerarPDF()">📄 Gerar PDF</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast">✅ PDF gerado com sucesso!</div>
+
+<script>
+/* ── Estado ──────────────────────────────────────────────── */
+let status = 'pendente';
+let rowId = 0;
+
+/* ── Inicialização ───────────────────────────────────────── */
+window.onload = () => {
+  const now = new Date();
+  document.getElementById('data').value = now.toISOString().split('T')[0];
+  document.getElementById('hora').value = now.toTimeString().slice(0,5);
+  document.getElementById('num_atend').value = 'ATD-' + now.getFullYear() + '-' + String(Math.floor(Math.random()*900)+100);
+  addItem();
+};
+
+/* ── Status ──────────────────────────────────────────────── */
+function setStatus(s) {
+  status = s;
+  ['pendente','aprovado','entregue','cancelado'].forEach(x => {
+    const btn = document.getElementById('st_' + x);
+    btn.className = 'status-btn' + (x === s ? ' active-' + x : '');
+  });
+}
+
+/* ── Itens ───────────────────────────────────────────────── */
+const CATS = ['Cimento e Argamassa','Areia e Brita','Tijolos e Blocos','Ferragens','Hidráulico','Elétrico','Tintas','Madeiras','Cerâmica / Piso','Telhado','Ferramentas','Outros'];
+const UNS  = ['un','cx','m','m²','m³','kg','ton','sc','lt','rolo','par','fd'];
+
+function addItem() {
+  rowId++;
+  const id = rowId;
+  const tbody = document.getElementById('itensBody');
+  const tr = document.createElement('tr');
+  tr.id = 'row_' + id;
+  tr.innerHTML = `
+    <td style="color:var(--muted);font-size:.78rem;font-weight:700">${String(id).padStart(2,'0')}</td>
+    <td><input type="text" placeholder="Descreva o material…" oninput="calcRow(${id})" /></td>
+    <td>
+      <select oninput="calcRow(${id})">
+        ${CATS.map(c => `<option>${c}</option>`).join('')}
+      </select>
+    </td>
+    <td style="width:70px">
+      <select oninput="calcRow(${id})">
+        ${UNS.map(u => `<option>${u}</option>`).join('')}
+      </select>
+    </td>
+    <td style="width:80px"><input type="number" min="0" value="1" oninput="calcRow(${id})" /></td>
+    <td style="width:120px"><input type="number" min="0" step="0.01" value="0" oninput="calcRow(${id})" /></td>
+    <td style="width:110px;font-weight:600" id="rowTotal_${id}">R$ 0,00</td>
+    <td class="center"><button class="btn-remove" onclick="removeItem(${id})" title="Remover">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function removeItem(id) {
+  const row = document.getElementById('row_' + id);
+  if (row) row.remove();
+  calcTotals();
+}
+
+function getRowData(id) {
+  const row = document.getElementById('row_' + id);
+  if (!row) return null;
+  const inputs  = row.querySelectorAll('input');
+  const selects = row.querySelectorAll('select');
+  return {
+    desc:     inputs[0].value.trim(),
+    cat:      selects[0].value,
+    un:       selects[1].value,
+    qtd:      parseFloat(inputs[1].value) || 0,
+    preco:    parseFloat(inputs[2].value) || 0,
+    total:    (parseFloat(inputs[1].value)||0) * (parseFloat(inputs[2].value)||0)
+  };
+}
+
+function calcRow(id) {
+  const d = getRowData(id);
+  if (!d) return;
+  document.getElementById('rowTotal_' + id).textContent = 'R$ ' + d.total.toFixed(2).replace('.',',');
+  calcTotals();
+}
+
+function calcTotals() {
+  let sub = 0;
+  document.querySelectorAll('[id^="rowTotal_"]').forEach(el => {
+    sub += parseFloat(el.textContent.replace('R$ ','').replace(',','.')) || 0;
+  });
+  const desc   = parseFloat(document.getElementById('desconto').value) || 0;
+  const frete  = parseFloat(document.getElementById('frete').value) || 0;
+  const total  = sub * (1 - desc/100) + frete;
+  document.getElementById('tSubtotal').textContent = 'R$ ' + sub.toFixed(2).replace('.',',');
+  document.getElementById('tTotal').textContent    = 'R$ ' + total.toFixed(2).replace('.',',');
+}
+
+/* ── Limpar ──────────────────────────────────────────────── */
+function limpar() {
+  if (!confirm('Deseja limpar todos os dados do formulário?')) return;
+  ['cli_nome','cli_doc','cli_tel','cli_email','cli_obra','cli_end','cli_bairro','cli_cidade',
+   'vendedor','obs','prazo'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('itensBody').innerHTML = '';
+  rowId = 0;
+  document.getElementById('desconto').value = '0';
+  document.getElementById('frete').value = '0';
+  calcTotals();
+  addItem();
+}
+
+/* ── Gerar PDF ───────────────────────────────────────────── */
+async function gerarPDF() {
+  const btn = document.getElementById('btnGerar');
+  btn.disabled = true;
+  btn.textContent = '⏳ Gerando…';
+
+  /* Coletar itens */
+  const rows = document.querySelectorAll('#itensBody tr');
+  const itens = [];
+  rows.forEach(row => {
+    const inputs  = row.querySelectorAll('input');
+    const selects = row.querySelectorAll('select');
+    if (inputs.length < 3) return;
+    const qtd   = parseFloat(inputs[1].value) || 0;
+    const preco = parseFloat(inputs[2].value) || 0;
+    itens.push({
+      desc:  inputs[0].value || '—',
+      cat:   selects[0]?.value || '',
+      un:    selects[1]?.value || '',
+      qtd,
+      preco,
+      total: qtd * preco
+    });
+  });
+
+  const payload = {
+    num_atend: document.getElementById('num_atend').value || 'S/N',
+    tipo:      document.getElementById('tipo').value || '—',
+    data:      document.getElementById('data').value,
+    hora:      document.getElementById('hora').value,
+    vendedor:  document.getElementById('vendedor').value,
+    status,
+    cliente: {
+      nome:   document.getElementById('cli_nome').value || '—',
+      doc:    document.getElementById('cli_doc').value,
+      tel:    document.getElementById('cli_tel').value,
+      email:  document.getElementById('cli_email').value,
+      obra:   document.getElementById('cli_obra').value,
+      end:    document.getElementById('cli_end').value,
+      bairro: document.getElementById('cli_bairro').value,
+      cidade: document.getElementById('cli_cidade').value,
+    },
+    itens,
+    desconto: parseFloat(document.getElementById('desconto').value) || 0,
+    frete:    parseFloat(document.getElementById('frete').value) || 0,
+    pagamento: document.getElementById('pagamento').value,
+    prazo:     document.getElementById('prazo').value,
+    validade:  document.getElementById('validade').value,
+    obs:       document.getElementById('obs').value,
+  };
+
+  try {
+    const resp = await fetch('/gerar_pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error('Erro na geração');
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `atendimento_${payload.num_atend}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✅ PDF gerado com sucesso!');
+  } catch(e) {
+    showToast('❌ Erro ao gerar PDF. Verifique o servidor.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📄 Gerar PDF';
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
